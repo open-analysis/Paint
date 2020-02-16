@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Tooltip?>
+
+<BorderPane fx:controller="paint.FXMLDocumentController" fx:id="borderPane" 
+    xmlns:fx="https://javafx.com/fxml" id="main"
+    minHeight="600" minWidth="800" styleClass="root">
+    
+    <top>
+        <VBox id="BGBox">
+            <MenuBar fx:id="menuBar" id="top" focusTraversable="true">
+                <menus>
+                    <Menu text="_File" mnemonicParsing="false">
+                        <items>
+                            <MenuItem text="New" onAction="#menuNewFile" mnemonicParsing="false" accelerator="Shortcut+N"/>
+                            <MenuItem text="Open" onAction="#menuOpenFile" mnemonicParsing="false" accelerator="Shortcut+O"/>
+                            <MenuItem text="Save" onAction="#menuSaveFile" mnemonicParsing="false" accelerator="Shortcut+S"/>
+                            <MenuItem text="Save As" onAction="#menuSaveAsFile" mnemonicParsing="false" accelerator="Shortcut+Shift+S"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Exit" onAction="#quitProgram" mnemonicParsing="false" accelerator="Shortcut+Q"/>
+                        </items>
+                    </Menu>
+                    <Menu text="_Edit" mnemonicParsing="true">
+                        <items>
+                            <MenuItem text="Copy" disable="true" mnemonicParsing="false" accelerator="Shortcut+C"/>
+                            <MenuItem text="Cut" disable="true" mnemonicParsing="false" accelerator="Shortcut+X"/>
+                            <MenuItem text="Paste" disable="true" mnemonicParsing="false" accelerator="Shortcut+O"/>
+                            <MenuItem text="Delete" disable="true"/>
+                            <SeparatorMenuItem/>
+                            <MenuItem text="Undo" onAction="#handleUndo" mnemonicParsing="false" accelerator="Shortcut+Z"/>
+                            <MenuItem text="Redo" onAction="#handleRedo" mnemonicParsing="false" accelerator="Shortcut+Y"/>
+                        </items>
+                    </Menu>
+                    <Menu text="View">
+                        <items>
+                            <MenuItem text="Resize Canvas" onAction="#resizeCanvas" mnemonicParsing="false" accelerator="Shortcut+R"/>
+                            <MenuItem text="Max Zoom in" onAction="#handleZoomInMax" mnemonicParsing="false" accelerator="Shift+I"/>
+                            <MenuItem text="Reset Zoom" onAction="#handleZoomOutMax" mnemonicParsing="false" accelerator="Shift+O"/>
+                            <MenuItem text="Rotate Image" disable="true" mnemonicParsing="false" accelerator="Shortcut+T"/>
+                        </items>
+                    </Menu>
+                    <Menu text="Help">
+                        <items>
+                            <MenuItem text="Help" onAction="#handleHelpPopUp" mnemonicParsing="false" accelerator="Shortcut+H"/>
+                            <MenuItem text="Release Notes" onAction="#handleReleaseNotesPopUp" mnemonicParsing="false" accelerator="Shortcut+Shift+H"/>
+                            <MenuItem text="Search" disable="true"/>
+                            <MenuItem text="Online Manual" visible="false"/>
+                        </items>
+                    </Menu>
+                </menus>
+            </MenuBar>
+            <HBox>
+                <Button id="undo" onAction="#handleUndo" prefWidth="20" prefHeight="20">
+                    <tooltip><Tooltip text="Undo"/></tooltip>
+                </Button>
+                <Button id="redo" onAction="#handleRedo" prefWidth="20" prefHeight="20">
+                    <tooltip><Tooltip text="Redo"/></tooltip>
+                </Button>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <ScrollPane id="scrollPane" fx:id="scrollPane">
+            <content>
+                <Canvas fx:id="canvas" width="450" height="450"/>
+            </content>
+        </ScrollPane>
+    </center>
+    
+    <left>
+        <VBox id="BGBox">
+            <Label id="toolBarTitle" text="Tool Bar" alignment="CENTER" />
+            <Label id="toolBarActions" text="Actions" alignment="CENTER"/>
+            <ToolBar id="toolBar" orientation="VERTICAL" >
+                <items>                
+                    <HBox>
+                        <Button id="pan" onAction="#selectPan" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="move around the canvas"/></tooltip>
+                        </Button>
+                        <Button id="selection" onAction="#selectSelect" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="select part of the canvas"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="colorGrabber" onAction="#selectColorGrabber" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="grab a color"/></tooltip>
+                        </Button>
+                        <Button id="line" onAction="#selectLine" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw straight lines"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="brush" onAction="#selectBrush" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="free draw on the canvas"/></tooltip>
+                        </Button>
+                        <Button id="bucket" onAction="#selectBucket" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="fill in the canvas"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="text" onAction="#selectText" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="write on the canvas"/></tooltip>
+                        </Button>
+                        <Button id="eraser" onAction="#selectEraser" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="erase the canvas"/></tooltip>
+                        </Button>
+                    </HBox>
+                </items>
+            </ToolBar>
+            
+            <padding><Insets top="10.0" left="3.0" right="3.0" bottom="10.0"/></padding>
+            
+            <Label id="toolBarShapes" text="Shapes" alignment="CENTER"/>
+            <ToolBar id="toolBar" orientation="VERTICAL" >
+                <items>    
+                    <HBox>
+                        <Button id="square_outline" onAction="#selectSquareOutline" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true" >
+                            <tooltip><Tooltip text="draw a square's outline"/></tooltip>
+                        </Button>
+                        <Button id="square_fill" onAction="#selectSquareFill" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw a filled square"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="rect_outline" onAction="#selectRectOutline" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true" >
+                            <tooltip><Tooltip text="draw a rectangle's outline"/></tooltip>
+                        </Button>
+                        <Button id="rect_fill" onAction="#selectRectFill" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw a filled rectangle"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="ellipse_outline" onAction="#selectEllipseOutline" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw an ellipse's outline"/></tooltip>
+                        </Button>
+                        <Button id="ellipse_fill" onAction="#selectEllipseFill" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw a filled ellipse"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="circle_outline" onAction="#selectCircleOutline" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw a cirlce's outline"/></tooltip>
+                        </Button>
+                        <Button id="circle_fill" onAction="#selectCircleFill" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw a filled circle"/></tooltip>
+                        </Button>
+                    </HBox>
+                    <HBox>
+                        <Button id="shape" onAction="#selectShape" prefWidth="20" prefHeight="20" textAlignment="CENTER" wrapText="true">
+                            <tooltip><Tooltip text="draw the outline to a shape, hit escape to stop"/></tooltip>
+                        </Button>
+                    </HBox>
+                </items>
+            </ToolBar>
+        </VBox>
+    </left>
+    
+    <bottom>
+        <HBox id="BGBox">
+            <VBox>
+                <Label text="Line Color"/>
+                <ColorPicker fx:id="strokeColorPicker" onAction="#handleStrokeColorPicker"/>
+            </VBox>
+            <VBox>
+                <Label text="Fill Color"/>
+                <ColorPicker fx:id="fillColorPicker" onAction="#handleFillColorPicker"/>
+            </VBox>
+            <VBox>
+                <Label text="Line Width"/>
+                <Spinner fx:id="spinLineWidth" prefWidth="80.0" editable="true"/>
+            </VBox>
+        </HBox>
+    </bottom>
+    
+    <stylesheets>
+        <URL value="@base.css"/>
+    </stylesheets>
+    
+</BorderPane>
+
+

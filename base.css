@@ -1,0 +1,167 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 21, 2020, 4:54:42 PM
+    Author     : jchic
+*/
+
+.label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #333333;
+    -fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-background-color: linear-gradient(#b3e6ff, #00334d);
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(#00334d, #b3e6ff);
+}
+
+#BGBox {
+    -fx-background-color: e6f5ff;
+}
+
+#scrollPane {
+    -fx-background-color: ccebff;
+}
+
+#toolBar {
+    -fx-background-color: b3e0ff;
+}
+
+#toolBarTitle {
+    -fx-font-size: 18px;
+    -fx-alignment: CENTER;
+}
+
+#toolBarActions{
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER;
+}
+
+#toolBarShapes {
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER;
+}
+
+#undo {
+    -fx-background-image: url("icons/undo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#redo {
+    -fx-background-image: url("icons/redo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#pan {
+    -fx-background-image: url("icons/hand.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#select {
+    -fx-background-image: url("icons/select.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#colorGrabber {
+    -fx-background-image: url("icons/eye_dropper.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#line {
+    -fx-background-image: url("icons/line.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#brush {
+    -fx-background-image: url("icons/paint_brush.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#bucket {
+    -fx-background-image: url("icons/paint_bucket.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#text {
+    -fx-background-image: url("icons/text.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#eraser {
+    -fx-background-image: url("icons/eraser.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#square_outline {
+    -fx-background-image: url("icons/square_outline.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#square_fill {
+    -fx-background-image: url("icons/square_fill.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#ellipse_outline {
+    -fx-background-image: url("icons/ellipse_outline.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#ellipse_fill {
+    -fx-background-image: url("icons/ellipse_fill.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#circle_outline {
+    -fx-background-image: url("icons/circle_outline.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#circle_fill {
+    -fx-background-image: url("icons/circle_fill.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#rect_outline {
+    -fx-background-image: url("icons/rect_outline.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#rect_fill {
+    -fx-background-image: url("icons/rect_fill.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#shape {
+    -fx-background-image: url("icons/pentagon.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
