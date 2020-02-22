@@ -19,6 +19,7 @@ import javafx.util.Pair;
 import paint.CanvasManager;
 
 /**
+ * Pops up dialog box that prompts the user for the length and width of the canvas that user is resizing.
  * 
  * @author jchic
  */

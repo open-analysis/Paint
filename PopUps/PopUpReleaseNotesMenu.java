@@ -15,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 
 /**
+ * Pops up the release notes for the paint program.
  *
  * @author jchic
  */

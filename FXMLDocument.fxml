@@ -32,14 +32,15 @@
                         <items>
                             <MenuItem text="Copy" disable="true" mnemonicParsing="false" accelerator="Shortcut+C"/>
                             <MenuItem text="Cut" disable="true" mnemonicParsing="false" accelerator="Shortcut+X"/>
-                            <MenuItem text="Paste" disable="true" mnemonicParsing="false" accelerator="Shortcut+O"/>
+                            <MenuItem text="Paste" disable="true" mnemonicParsing="false" accelerator="Shortcut+V"/>
                             <MenuItem text="Delete" disable="true"/>
+                            <MenuItem text="Auto-Save Timer" onAction="#handleViewAutoTimer"/>
                             <SeparatorMenuItem/>
                             <MenuItem text="Undo" onAction="#handleUndo" mnemonicParsing="false" accelerator="Shortcut+Z"/>
                             <MenuItem text="Redo" onAction="#handleRedo" mnemonicParsing="false" accelerator="Shortcut+Y"/>
                         </items>
                     </Menu>
-                    <Menu text="View">
+                    <Menu text="_View" mnemonicParsing="true">
                         <items>
                             <MenuItem text="Resize Canvas" onAction="#resizeCanvas" mnemonicParsing="false" accelerator="Shortcut+R"/>
                             <MenuItem text="Max Zoom in" onAction="#handleZoomInMax" mnemonicParsing="false" accelerator="Shift+I"/>
@@ -47,7 +48,7 @@
                             <MenuItem text="Rotate Image" disable="true" mnemonicParsing="false" accelerator="Shortcut+T"/>
                         </items>
                     </Menu>
-                    <Menu text="Help">
+                    <Menu text="_Help" mnemonicParsing="true">
                         <items>
                             <MenuItem text="Help" onAction="#handleHelpPopUp" mnemonicParsing="false" accelerator="Shortcut+H"/>
                             <MenuItem text="Release Notes" onAction="#handleReleaseNotesPopUp" mnemonicParsing="false" accelerator="Shortcut+Shift+H"/>
@@ -177,6 +178,10 @@
             <VBox>
                 <Label text="Line Width"/>
                 <Spinner fx:id="spinLineWidth" prefWidth="80.0" editable="true"/>
+            </VBox>
+            <VBox>
+                <Label text="Auto-Save Timer" visible="true"/>
+                <Label fx:id="timerLabel" text="Timer" visible="true"/>
             </VBox>
         </HBox>
     </bottom>

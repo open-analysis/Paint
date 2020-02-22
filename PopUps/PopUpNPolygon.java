@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 /**
+ * Pops up a dialog box that prompts the user for length and number of sides of a polygon to draw.
  *
  * @author jchic
  */

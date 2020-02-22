@@ -12,6 +12,7 @@ import javafx.scene.control.ButtonType;
 import paint.CanvasManager;
 
 /**
+ * Pops up the smart save feature that prompts the user to save unfinished work that is about to be closed.
  *
  * @author jchic
  */
@@ -42,7 +43,7 @@ public class PopUpSmartSave {
         Optional<ButtonType> result = saveAlert.showAndWait();
         if (result.get() == ButtonType.OK){
             // user chose OK
-            canvasManager.fileSave();
+            canvasManager.getImageManager().fileSave();
             return;
         } else {
             // user chose CANCEL or closed the dialog

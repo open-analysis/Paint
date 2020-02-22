@@ -5,22 +5,14 @@
  */
 package paint;
 
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.Stack;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
-import javax.imageio.ImageIO;
 import paint.PopUps.PopUpNPolygon;
 
 /**
@@ -31,16 +23,15 @@ import paint.PopUps.PopUpNPolygon;
 public class CanvasManager {
     
     // MEMBER VARIABLES
-    private final FileChooser fileChooser = new FileChooser();
     private Canvas canvas;
     private GraphicsContext gc;
-    private File currFile;
     private Color strokeColor, fillColor;    
-    private WritableImage canvasImage;
+    //private WritableImage canvasImage;
     private double mouseX, mouseY;
     private Stack<WritableImage> Undo, Redo;
     private boolean modified = false;
-    private ImageSaver imgSaver;
+    private ImageManager imgSaver;
+    private AutoSaver autoSaver;
     
     
     // CONSTRUCTORS
@@ -52,10 +43,8 @@ public class CanvasManager {
      * 
      * @param canvas    the canvas from FXMLDocumentController to manipulate the same canvas
      */
-    public CanvasManager(Canvas canvas){
+    public CanvasManager(Canvas canvas, AutoSaver as){
         // init'ing vars
-        currFile = null;
-        canvasImage = null;
         this.canvas = canvas;
         gc = this.canvas.getGraphicsContext2D();
         mouseX = mouseY = 0.0;
@@ -65,93 +54,13 @@ public class CanvasManager {
         strokeColor = Color.BLACK;
         fillColor = Color.BLACK;
         
-        imgSaver = new ImageSaver(this);
-        
-        // designating what file extentions the fileChooser filters
-        fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("All Files", "*.jpeg", "*.jpg",
-                "*.png", "*.tiff", "*.tif","*.bmp", "*.JPEG", "*.JPG","*.PNG",
-                "*.TIFF","*.TIF", "*.BMP"),
-            new FileChooser.ExtensionFilter("JPEG", "*.jpeg", "*.jpg",
-                "*.JPEG", "*.JPG"),
-            new FileChooser.ExtensionFilter("PNG", "*.png", "*.PNG"),
-            new FileChooser.ExtensionFilter("BMP", "*.bmp", "*.BMP"),
-            new FileChooser.ExtensionFilter("TIFF", "*.tiff", "*.tif",
-                "*.TIFF", "*.tif")
-            );
+        imgSaver = new ImageManager(this, as);
         
         // setting up the canvas
         fillCanvas(Color.WHITE, 0, 0);
     }
     
     // METHODS
-    
-    /**
-     *  Opens an image from the computer.
-     */
-    public void fileOpen(){
-        // opens the window to choose where the file is
-        File file = fileChooser.showOpenDialog(null);
-        currFile = file;
-        if (file != null){
-            Image img = null;
-            try {
-                // sets an image obj to the file path's location obj
-                img = new Image(new FileInputStream(file.getAbsolutePath()));
-                
-            } catch (FileNotFoundException ex) {
-                System.out.println("Failed to open image");
-            }
-            canvas.setWidth(img.getWidth());
-            canvas.setHeight(img.getHeight());
-            gc.drawImage(img, 0, 0);
-        }
-    }
-    
-    
-    /**
-     *  Takes a screenshot of the canvas and then saves. 
-     *  If it hasn't been saved yet, it calls fileSaveAs.
-     */
-    public void fileSave(){
-        // opens the window to choose where the file is saved to
-        if (currFile == null){
-            fileSaveAs();
-            return;
-        }
-        
-        if (currFile != null) {
-            try{ 
-                WritableImage writable = new WritableImage( (int) canvas.getWidth(), (int) canvas.getHeight());
-                canvas.snapshot(null, writable);
-                RenderedImage rendered = SwingFXUtils.fromFXImage(writable, null);
-                ImageIO.write(rendered, "png", currFile);
-            } catch (IOException io){
-                System.out.println("Failed to save image");
-            }
-        }
-    }
-    
-    /**
-     * Takes a screenshot of the canvas and then saves that image to the user's choosing.  
-     */
-    public void fileSaveAs(){
-        // opens the window to choose where the file is saved to
-        File outputFile = fileChooser.showSaveDialog(null);
-        // setting the currFile to outputFile so that save already has a File object
-        currFile = outputFile;
-        
-        if (outputFile != null) {
-            try{ 
-                WritableImage writable = new WritableImage( (int) canvas.getWidth(), (int) canvas.getHeight());
-                canvas.snapshot(null, writable);
-                RenderedImage rendered = SwingFXUtils.fromFXImage(writable, null);
-                ImageIO.write(rendered, "png", outputFile);
-            } catch (IOException io){
-                System.out.println("Failed to save image");
-            }
-        }
-    }
     
     // Drawing
     
@@ -165,6 +74,8 @@ public class CanvasManager {
         WritableImage img = canvas.snapshot(null, null);
         Color color = img.getPixelReader().getColor(posX, posY);
         strokeColor = fillColor = color;
+        // Unit test
+        assert color != Color.TRANSPARENT;
     }
     
     /**
@@ -229,6 +140,10 @@ public class CanvasManager {
         if (result.isPresent()){
             text = result.get();
         }
+        
+        // unit test
+        assert text != null;
+        
         //gc.setFont(new Font(gc.getLineWidth()));
         gc.strokeText(text, mouseX, mouseY);
     }
@@ -676,23 +591,76 @@ public class CanvasManager {
     }
     
     // Getters
+    /**
+     * Returns the x position of the mouse.
+     * @return x position of the mouse
+     */
     public double getMouseX(){ return mouseX; }
+    /**
+     * Returns the y position of the mouse.
+     * @return y position of the mouse
+     */
     public double getMouseY(){ return mouseY; }
+    /**
+     * Gets the canvas that is being worked on.
+     * @return the canvas currently being worked on
+     */
     public Canvas getCanvas() { return canvas; }
+    /**
+     * Gets the color of the GraphicContext's stroke.
+     * @return color that GraphicsContext uses to stroke lines
+     */
     public Color getStrokeColor() { return strokeColor; }
+    /**
+     * Gets the color of the GraphicContext's fill.
+     * @return color that GraphicsContext uses to fill shapes
+     */
     public Color getFillColor() { return fillColor; }
-    public File getFile() { return currFile; }
-    public GraphicsContext getGraphicsContext() { return gc; }
+    /**
+     * Gets if the current file has been modified by the user.
+     * @return boolean if the user has interacted with the current image
+     */
     public boolean getModified() { return modified; }
+    /**
+     * Gets the current zoom level of the canvas.
+     * @return the double of the x scale of the canvas
+     */
     public double getZoom() { return canvas.getScaleX(); } // both ScaleX & ScaleY will be the same
+    /**
+     * Gets the GraphicsContext of the Canvas.
+     * @return the GraphicsContext of current canvas
+     */
     public GraphicsContext getGC() { return gc; }
-    public ImageSaver getImageSaver() { return imgSaver; }
+    /**
+     * Gets the ImageSaver that controls the saving and opening of images onto the canvas.
+     * @return ImageSaver object that is used to control some of the canvas manipulations
+     */
+    public ImageManager getImageManager() { return imgSaver; }
     
     // Setters
+    /**
+     * Set the x position of the mouse.
+     * @param x x position of the mouse
+     */
     public void setMouseX(double x){ mouseX = x; }
+    /**
+     * Set the y position of the mouse.
+     * @param y y position of the mouse
+     */
     public void setMouseY(double y){ mouseY = y; }
+    /**
+     * Set the stroke color for the GraphicsContext.
+     * @param c the color that will be used in GraphicsContext.stroke
+     */
     public void setStrokeColor(Color c) { strokeColor = c; }
+    /**
+     * Set the fill color for the GraphicsContext.
+     * @param c the color that will be used in GraphicsContext.fill
+     */
     public void setFillColor(Color c) { fillColor = c; }
-    public void setFile(File f) { currFile = f; }
+    /**
+     * Sets the modified variable for if the user has modified the current image.
+     * @param mod boolean that determines if the user has modified the current image
+     */
     public void setModified(boolean mod) { modified = mod; }
 }

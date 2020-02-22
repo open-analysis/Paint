@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package paint.PopUps;
 
 import javafx.scene.control.Alert;
@@ -10,7 +11,8 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 
 /**
- *
+ * Pops up the help menu for the program that tells that user how to use the program and what the features do.
+ * 
  * @author jchic
  */
 public class PopUpHelpMenu {

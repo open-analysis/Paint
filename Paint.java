@@ -12,7 +12,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- *
+ * This is the start of the program. It sets the title and window's minimum width and height, as well as making start with maximizing the window.
+ * 
  * @author jchic
  */
 public class Paint extends Application {
