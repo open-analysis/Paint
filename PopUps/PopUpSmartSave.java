@@ -37,7 +37,7 @@ public class PopUpSmartSave {
     public void popSmartSave(){
         Alert saveAlert = new Alert(AlertType.CONFIRMATION);
         saveAlert.setTitle("Smart Save");
-        saveAlert.setHeaderText("\"You have made changes to the file.\\nWould you like to save them?\"");
+        saveAlert.setHeaderText("\"You have made changes to the file.\nWould you like to save them?\"");
         saveAlert.setContentText("Are you ok with this?");
 
         Optional<ButtonType> result = saveAlert.showAndWait();

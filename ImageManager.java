@@ -114,6 +114,9 @@ public class ImageManager {
      * @param posY y position of the mouse
      */
     public void movePartialCanvasImage(double posX, double posY){
+        // saving a screenshot of the current canvas to undo
+        canvasManager.addUndo(new WritableImage( (int) canvas.getWidth(), (int) canvas.getHeight()));
+        
         dX = posX;
         dY = posY;
         
@@ -161,6 +164,11 @@ public class ImageManager {
             canvas.setHeight(img.getHeight());
             canvasManager.getGC().drawImage(img, 0, 0);
         }
+        
+        Platform.runLater(() -> {
+            System.out.println("Resetting");
+            autoSaver.reset();
+        });
     }
     
     /**
@@ -210,6 +218,13 @@ public class ImageManager {
         // setting the currFile to outputFile so that save already has a File object
         currFile = outputFile;
         
+        if (!fileExtention.equals(getFileExtention(currFile))){
+            System.out.println("New File types");
+            fileExtention = getFileExtention(currFile);
+            PopUpNewFileFormatAlert puAlert = new PopUpNewFileFormatAlert();
+            puAlert.popAlert();
+        }
+        
         if (fileExtention.equals("png"))
             savePNG();
         else
@@ -227,11 +242,6 @@ public class ImageManager {
                 WritableImage writable = new WritableImage( (int) canvas.getWidth(), (int) canvas.getHeight());
                 canvas.snapshot(null, writable);
                 RenderedImage rendered = SwingFXUtils.fromFXImage(writable, null);
-                if (!fileExtention.equals(getFileExtention(currFile))){
-                    fileExtention = getFileExtention(currFile);
-                    PopUpNewFileFormatAlert puAlert = new PopUpNewFileFormatAlert();
-                    puAlert.popAlert();
-                }
                 ImageIO.write(rendered, fileExtention, currFile);
             } catch (IOException io){
                 System.out.println("Failed to save image");

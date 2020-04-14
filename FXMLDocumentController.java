@@ -58,7 +58,7 @@ public class FXMLDocumentController implements Initializable {
     private int shapeStatus = 0; // to determine if the shape that the user is drawing is or still being drawn
     private boolean selected = false;
     private AutoSaver autoSaver;
-    private ToolLogger toolLogger;
+    //private ToolLogger toolLogger;
 
     
     /**
@@ -68,6 +68,10 @@ public class FXMLDocumentController implements Initializable {
      */
     EventHandler mouseHandler = new EventHandler<MouseEvent>(){
                     public void handle(MouseEvent mouse){
+                        // updating the logger
+                        /*Platform.runLater( () -> {
+                            toolLogger.update(currInteractMode);
+                        });*/
                         // preemptively setting the MouseX & MouseY coords because all-almost all of the functions will need it
                         if (mouse.getEventType() == MouseEvent.MOUSE_PRESSED){
                                 canvasManager.setMouseX(mouse.getX());
@@ -77,7 +81,7 @@ public class FXMLDocumentController implements Initializable {
                         // Panning around the canvas
                         if (currInteractMode == InteractMode.PAN){
                             if (mouse.getEventType() == MouseEvent.MOUSE_PRESSED){
-                                canvasManager.pan(mouse.getScreenX(), mouse.getScreenY());
+                                canvasManager.pan(mouse.getX(), mouse.getY());
                                 borderPane.setCursor(Cursor.CLOSED_HAND);
                             }
                             else if (mouse.getEventType() == MouseEvent.MOUSE_DRAGGED){
@@ -95,11 +99,11 @@ public class FXMLDocumentController implements Initializable {
                                 }
                                 else if (mouse.getEventType() == MouseEvent.MOUSE_DRAGGED){
                                     canvasManager.getImageManager().drawCanvas();
-                                    canvasManager.moveSelected(mouse.getScreenX(), mouse.getScreenY());
+                                    canvasManager.moveSelected(mouse.getX(), mouse.getY());
                                 }
                                 else if (mouse.getEventType() == MouseEvent.MOUSE_RELEASED){
                                     canvasManager.getImageManager().drawCanvas();
-                                    canvasManager.moveSelected(mouse.getScreenX(), mouse.getScreenY());
+                                    canvasManager.moveSelected(mouse.getX(), mouse.getY());
                                     selected = false;
                                     borderPane.setCursor(Cursor.CROSSHAIR);
                                 }
@@ -161,34 +165,7 @@ public class FXMLDocumentController implements Initializable {
                         // Eraser
                         else if (currInteractMode == InteractMode.ERASER){
                             if (mouse.getEventType() == MouseEvent.MOUSE_PRESSED){
-                                canvasManager.eraseBrush(mouse.getX(), mouse.getY(), true);
-                            }
-                            else if (mouse.getEventType() == MouseEvent.MOUSE_DRAGGED){
-                                canvasManager.eraseBrush(mouse.getX(), mouse.getY(), false);
-                            }
-                        }
-                        // Draw square outline
-                        else if (currInteractMode == InteractMode.SQUARE_OUTLINE){
-                            if (mouse.getEventType() == MouseEvent.MOUSE_PRESSED){
-                                canvasManager.getImageManager().saveCanvasImage();
-                            }
-                            else if (mouse.getEventType() == MouseEvent.MOUSE_DRAGGED){
-                                canvasManager.getImageManager().drawCanvas();
-                                canvasManager.drawSquare(mouse.getX(), mouse.getY(), false);
-                                //drawProgress.drawShape(mouse.getX(), mouse.getY());
-                            }
-                            else if (mouse.getEventType() == MouseEvent.MOUSE_RELEASED){
-                                canvasManager.getImageManager().drawCanvas();
-                                canvasManager.drawSquare(mouse.getX(), mouse.getY(), false);
-                                canvasManager.getImageManager().saveCanvasImage();
-                            }
-                        }
-                        // draw filled square
-                        else if (currInteractMode == InteractMode.SQUARE_FILL){
-                            if (mouse.getEventType() == MouseEvent.MOUSE_PRESSED){
-                                canvasManager.getImageManager().saveCanvasImage();
-                            }
-                            else if (mouse.getEventType() == MouseEvent.MOUSE_DRAGGED){
+                          else if (mouse.getEventType() == MouseEvent.MOUSE_DRAGGED){
                                 canvasManager.getImageManager().drawCanvas();
                                 canvasManager.drawSquare(mouse.getX(), mouse.getY(), true);
                             }
@@ -325,17 +302,11 @@ public class FXMLDocumentController implements Initializable {
     private void selectPan(){
         currInteractMode = InteractMode.PAN;
         borderPane.setCursor(Cursor.OPEN_HAND);
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectSelect(){
         currInteractMode = InteractMode.SELECT;
         borderPane.setCursor(Cursor.CROSSHAIR);
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectColorGrabber(){
@@ -347,9 +318,6 @@ public class FXMLDocumentController implements Initializable {
             System.err.println(ex);
         }
         borderPane.setCursor(new ImageCursor(cursorImage));
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectLine(){
@@ -361,9 +329,6 @@ public class FXMLDocumentController implements Initializable {
             System.err.println(ex);
         }
         borderPane.setCursor(new ImageCursor(cursorImage));
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectBrush(){
@@ -376,10 +341,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectBucket(){
@@ -392,10 +353,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectEraser(){
@@ -408,10 +365,6 @@ public class FXMLDocumentController implements Initializable {
         }       
         // updating the cursor 
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectText(){
@@ -424,10 +377,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
      @FXML
     private void selectSquareOutline(){
@@ -440,10 +389,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectEllipseOutline(){
@@ -456,10 +401,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectCircleOutline(){
@@ -472,10 +413,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectRectOutline(){
@@ -488,10 +425,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectSquareFill(){
@@ -504,10 +437,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectEllipseFill(){
@@ -520,10 +449,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectCircleFill(){
@@ -536,10 +461,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectRectFill(){
@@ -552,10 +473,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     @FXML
     private void selectShape(){
@@ -568,10 +485,6 @@ public class FXMLDocumentController implements Initializable {
         }
         // updating the cursor
         borderPane.setCursor(new ImageCursor(cursorImage));
-        // updating the logger
-        Platform.runLater( () -> {
-            toolLogger.update(currInteractMode);
-        });
     }
     
     // Menu Operations
@@ -686,7 +599,7 @@ public class FXMLDocumentController implements Initializable {
             puSmartSave.popSmartSave();
         }
 //        autoSaver.stop();
-        toolLogger.stop();
+        //toolLogger.stop();
         Platform.exit();
     }
     
@@ -736,7 +649,7 @@ public class FXMLDocumentController implements Initializable {
         autoSaver.setCanvasManager(canvasManager);
         autoSaver.start();
         
-        toolLogger = new ToolLogger();
+        //toolLogger = new ToolLogger();
         
 //        borderPane = new BorderPane();
         borderPane.setCursor(Cursor.OPEN_HAND);

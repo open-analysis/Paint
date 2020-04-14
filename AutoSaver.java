@@ -27,7 +27,6 @@ public class AutoSaver {
     /**
      * Constructor. Sets the CanvasManager to the one being used in the document controller.
      * 
-     * @param cm the CanvasManager such that this class can call the save functionality
      * @param l the Label on the canvas called timerLabel that displays how much time is left before the auto-save
      */
     public AutoSaver(Label l) {

@@ -42,6 +42,7 @@ public class CanvasManager {
      *  Also sets the file extensions that can be used, inits the undo/redo stacks, and the colors.
      * 
      * @param canvas    the canvas from FXMLDocumentController to manipulate the same canvas
+     * @param as auto-saver object so that the canvas manager is able to call a reset on the timer
      */
     public CanvasManager(Canvas canvas, AutoSaver as){
         // init'ing vars
